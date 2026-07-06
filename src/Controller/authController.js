@@ -91,3 +91,7 @@ exports.protect = async (req, res, next) => {
     
     next();
 }
+
+exports.aboutme = (req, res, next) => {
+    console.log("I am Broncho King and I live in the capital City of Ghana – Accra");
+}
