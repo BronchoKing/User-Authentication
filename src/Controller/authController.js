@@ -42,13 +42,17 @@ exports.userSignup = async (req, res, next) => {
           password,
           confirmpassword
     });
+    
+    setJWT(user, 201, res);
 
-        return res.status(201).json({
+    /*   
+    return res.status(201).json({
             status: "success",
             data: {
                 user
             }
         });
+        */
 
     } catch (error) {
         console.log("ERROR OBJECT --->",error);
