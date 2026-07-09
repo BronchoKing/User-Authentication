@@ -8,7 +8,10 @@ app.use(express.static("Public"));
 const userRoute = require('./src/Routes/userRoute.js');
 
 app.use(cors({
-    origin: "https://profitharvester.com",
+    origin: [
+        "https://profitharvester.com",
+        "https://www.profitharvester.com"
+    ],
     credentials: true
 }));
 app.use(express.json());
