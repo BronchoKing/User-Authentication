@@ -35,12 +35,12 @@ const setJWT = (user, statusCode, res) => {
 
 exports.userSignup = async (req, res, next) => {
     try {
-          const {fullname, email, password, confirmpassword} = req.body;
+          const { fullname, email, password, confirmpassword } = req.body;
           const user = await User.create({
-          fullname,
-          email,
-          password,
-          confirmpassword
+          fullname: req.body.fullname,
+          email: req.body.email,
+          password: req.body.password,
+          confirmpassword: req.body.confirmpassword
     });
     
     setJWT(user, 201, res);
