@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(express.static("Public"));
 const userRoute = require('./src/Routes/userRoute.js');
