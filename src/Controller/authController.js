@@ -85,6 +85,7 @@ exports.userLogin = async (req, res, next) => {
             });
         }
 
+        // Calling and setting the JWT token
         setJWT(user, 200, res);
         console.log("COOKIE", req.cookies);
         
@@ -95,6 +96,7 @@ exports.userLogin = async (req, res, next) => {
         });
     }
 }
+
 
 exports.protect = async (req, res, next) => {
     /*
@@ -117,7 +119,7 @@ exports.protect = async (req, res, next) => {
     if(!token){
         return res.status(404).json({
             status: "fail",
-            message: "You are not loggied in"
+            message: "You are not logged in"
         });
     }
 
@@ -130,11 +132,20 @@ exports.protect = async (req, res, next) => {
 
     if(!user) {
         return res.status(404).json({
-            message: "JWT Token is invalid/non-existent"
+            message: "User no longer exists."
         });
     }
+
+    req.user = user;
     
     next();
+}
+
+// Extract user full name
+exports.userFullname = async (req, res, next) => {
+     res.json({
+        fullname: req.user.fullname.split(' ')[0]
+     });
 }
 
 /*
