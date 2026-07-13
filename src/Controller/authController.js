@@ -19,7 +19,7 @@ const setJWT = (user, statusCode, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge: 24 * 60 * 60
+        maxAge: 24 * 60 * 60               // 1 day in seconds
     }
 
     res.cookie('jwt', token, options);
@@ -139,6 +139,21 @@ exports.protect = async (req, res, next) => {
     req.user = user;
     
     next();
+}
+
+// Signout controller to sign a user out of a session by clearing JWT cookie from the browser
+exports.signOut = async (req, res, next) => {
+    res.clearCookie('jwt', {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none", 
+        maxAge: 24 * 60 * 60                        // In seconds, equal to 1 day   
+    });
+
+    res.status(200).json({
+        status: "success",
+        message: "Logged out successfully"
+    });
 }
 
 // Extract user full name
