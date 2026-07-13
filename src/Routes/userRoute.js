@@ -11,7 +11,7 @@ router.route('/user-signout').post(authController.signOut);
 router.route('/about-me').post(authController.aboutme);
 */
 
-router.route('/user-login').post(authController.protect, authController.userLogin);
+router.route('/user-login').post(authController.userLogin);
 
 
 module.exports = router;
