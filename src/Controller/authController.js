@@ -158,9 +158,23 @@ exports.signOut = async (req, res, next) => {
 
 // Extract user full name
 exports.userFullname = async (req, res, next) => {
+        let token;
+
+        if(req.cookies.jwt){
+            token = req.cookies.jwt
+        }
+
+        const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_STRING);
+
+        const user = await User.findById(decodedToken.id);
+
+        req.user = user;
+
      res.json({
         fullname: req.user.fullname.split(' ')[0]
      });
+
+     next();
 }
 
 /*
