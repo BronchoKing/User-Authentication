@@ -15,6 +15,14 @@ const sendEmail = async(option) => {
         }
     });
 
+    transporter.verify((error, success) => {
+    if(error){
+        console.log("SMTP ERROR:", error);
+    } else {
+        console.log("SMTP READY");
+    }
+});
+
     const emailOptions = {
         from: 'Profit Harvester Support<evansobuobi977@gmail.com>',
         to: option.email,
