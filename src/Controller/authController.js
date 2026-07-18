@@ -234,7 +234,7 @@ exports.resetPassword = async (req, res, next) => {
             });
         }
 
-        user.password = req.body.password;
+        user.password = req.body.newpassword;
         user.confirmpassword = req.body.confirmpassword;
 
         user.passwordResetToken = undefined;
