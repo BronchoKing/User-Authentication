@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const util = require('util');            // This imports Node.js's built-in util module. The util module provides helper functions for working with callbacks, objects, strings, debugging, and more.
                                         // One of its most common uses is converting callback-based functions into Promise-based functions using util.promisify().
 const cookieParser = require('cookie-parser');
+const sendEmail = require('../Util/email.js');
 
 
 
@@ -176,6 +177,50 @@ exports.userFullname = async (req, res, next) => {
 
      next();
 }
+
+exports.forgotPassword = async (req, res, next) => {
+    const user = User.findOne({email: req.body.email});
+
+    if(!user){
+        return res.status(401).json({
+            message: "User not found."
+        });
+    }
+
+    const resetToken = user.createPasswordResetToken();
+
+    await user.save({ validateBeforeSave: false });
+
+    const resetUrl = `https://profitharvester.com/reset-password.html/${resetToken}`;
+    const message = `We have received a password reset request. Please use the below link to reset your password\n\n${resetUrl}\n\nThis reset password link will expired in 10 minutes.`
+    
+    try {
+        sendEmail({
+            email: user.email,
+            subject: 'Password change request received.',
+            message: message
+        })
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Password reset link sent. Please check in your email inbox.'
+        });
+    } catch (error) {
+        user.passwordResetToken = undefined,
+        user.passwordResetTokenExpires = undefined
+
+        await user.save({ validateBeforeSave: false });
+    }
+    
+    next();
+}
+
+
+exports.resetPassword = async (req, res, next) => {
+
+}
+
+
 
 /*
 exports.aboutme = (req, res, next) => {

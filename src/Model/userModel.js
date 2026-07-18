@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 
 
@@ -34,7 +35,10 @@ const userSchema = new mongoose.Schema({
             },
             message: "Password & Confirm password does not match please"
         }
-    }
+    },
+
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date
 });
 
 
@@ -48,6 +52,14 @@ userSchema.pre('save', async function() {
 
 userSchema.methods.comparePasswordInDb = async function(pswd, pwswDb) {
     return await bcrypt.compare(pswd, pwswDb);
+}
+
+userSchema.methods.createPasswordResetToken = function() {
+    const unhashedResetToken = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = crypto.createHash('sh256').update(unhashedResetToken).digest('hex');
+    this.passwordResetTokenExpires = Date.now() + 100 * 60 * 60;
+
+    return unhashedResetToken;
 }
 
 const User = mongoose.model('User', userSchema);
