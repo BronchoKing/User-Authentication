@@ -13,7 +13,7 @@ const sendEmail = async(option) => {
     });
 
     const emailOptions = {
-        from: 'Profit Harvester Support<support@profitharvester.com>',
+        from: 'Profit Harvester Support<evansobuobi977@gmail.com>',
         to: option.email,
         subject: option.subject,
         message: option.message
