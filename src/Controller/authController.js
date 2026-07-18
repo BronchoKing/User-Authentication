@@ -180,6 +180,8 @@ exports.userFullname = async (req, res, next) => {
 }
 
 exports.forgotPassword = async (req, res, next) => {
+        console.log("FORGOT PASSWORD ROUTE HIT");
+
     const user =  await User.findOne({email: req.body.email});
 
     if(!user){
