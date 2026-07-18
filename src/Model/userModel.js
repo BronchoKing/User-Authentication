@@ -56,7 +56,7 @@ userSchema.methods.comparePasswordInDb = async function(pswd, pwswDb) {
 
 userSchema.methods.createPasswordResetToken = function(){
     const unhashedResetToken = crypto.randomBytes(32).toString('hex');
-    this.passwordResetToken = crypto.createHash('sh256').update(unhashedResetToken).digest('hex');
+    this.passwordResetToken = crypto.createHash('sha256').update(unhashedResetToken).digest('hex');
     this.passwordResetTokenExpires = Date.now() + 10 * 1000 * 60;
 
     return unhashedResetToken;
