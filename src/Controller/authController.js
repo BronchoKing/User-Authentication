@@ -253,6 +253,8 @@ exports.resetPassword = async (req, res, next) => {
             message: error.message
         });
     }
+
+    next();
 }
 
 
