@@ -196,7 +196,7 @@ exports.forgotPassword = async (req, res, next) => {
     const message = `We have received a password reset request. Please use the below link to reset your password\n\n${resetUrl}\n\nThis reset password link will expired in 10 minutes.`
     
     try {
-        sendEmail({
+        await sendEmail({
             email: user.email,
             subject: 'Password change request received.',
             message: message
