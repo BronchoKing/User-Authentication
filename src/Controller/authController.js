@@ -218,6 +218,8 @@ exports.forgotPassword = async (req, res, next) => {
         await user.save({ validateBeforeSave: false });
     }
 
+    console.log("Second ROUTE HIT");
+
     next();
 }
 
