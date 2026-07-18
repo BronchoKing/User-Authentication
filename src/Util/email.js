@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const sendEmail = async(option) => {
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
-        port: process.env.PORT,
+        port: process.env.EMAIL_PORT,
         secure: true,
         auth: {
             user: process.env.EMAIL_USER,
@@ -16,7 +16,7 @@ const sendEmail = async(option) => {
         from: 'Profit Harvester Support<evansobuobi977@gmail.com>',
         to: option.email,
         subject: option.subject,
-        message: option.message
+        text: option.message
     }
 
     await transporter.sendMail(emailOptions);
