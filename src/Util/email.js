@@ -8,8 +8,7 @@ const sendEmail = async (option) => {
 
         host: "smtp-relay.brevo.com",
 
-        port: process.env.EMAIL_PORT,
-
+        port: parseInt(process.env.EMAIL_PORT, 10) || 587,
         secure: false,
 
         auth: {
