@@ -10,6 +10,8 @@ const sendEmail = async (option) => {
 
         port: parseInt(process.env.EMAIL_PORT, 10) || 587,
         secure: false,
+        logger: true,
+        debug: true,
 
         auth: {
             user: process.env.BREVO_SMTP_USER,
