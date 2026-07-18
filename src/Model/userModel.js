@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
             validator: function(val) {
                 return val === this.password;
             },
-            message: "Password & Confirm password does not match please"
+            message: "Password & Confirm password does not match please."
         }
     },
 
@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
 
 
 
-userSchema.pre('save', async function() {
+userSchema.pre('save', async function(){
     if(!this.isModified('password')) return;    
 
     this.password = await bcrypt.hash(this.password, 12);
@@ -54,10 +54,10 @@ userSchema.methods.comparePasswordInDb = async function(pswd, pwswDb) {
     return await bcrypt.compare(pswd, pwswDb);
 }
 
-userSchema.methods.createPasswordResetToken = function() {
+userSchema.methods.createPasswordResetToken = function(){
     const unhashedResetToken = crypto.randomBytes(32).toString('hex');
     this.passwordResetToken = crypto.createHash('sh256').update(unhashedResetToken).digest('hex');
-    this.passwordResetTokenExpires = Date.now() + 100 * 60 * 60;
+    this.passwordResetTokenExpires = Date.now() + 10 * 1000 * 60;
 
     return unhashedResetToken;
 }

@@ -4,6 +4,7 @@ const util = require('util');            // This imports Node.js's built-in util
                                         // One of its most common uses is converting callback-based functions into Promise-based functions using util.promisify().
 const cookieParser = require('cookie-parser');
 const sendEmail = require('../Util/email.js');
+const crypto = require('crypto');
 
 
 
@@ -20,7 +21,7 @@ const setJWT = (user, statusCode, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge: 24 * 60 * 60               // 1 day in seconds
+        maxAge: 6 * 60 * 60 * 1000              // expires in 6 hours
     }
 
     res.cookie('jwt', token, options);
@@ -179,7 +180,7 @@ exports.userFullname = async (req, res, next) => {
 }
 
 exports.forgotPassword = async (req, res, next) => {
-    const user = User.findOne({email: req.body.email});
+    const user =  await User.findOne({email: req.body.email});
 
     if(!user){
         return res.status(401).json({
@@ -191,7 +192,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `https://profitharvester.com/reset-password.html/${resetToken}`;
+    const resetUrl = `https://profitharvester.com/reset-password.html?token=${resetToken}`;
     const message = `We have received a password reset request. Please use the below link to reset your password\n\n${resetUrl}\n\nThis reset password link will expired in 10 minutes.`
     
     try {
@@ -211,13 +212,47 @@ exports.forgotPassword = async (req, res, next) => {
 
         await user.save({ validateBeforeSave: false });
     }
-    
+
     next();
 }
 
 
 exports.resetPassword = async (req, res, next) => {
+    try {
+        const token = req.params.token;
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
+        const user = await User.findOne({
+            passwordResetToken: hashedToken,
+            passwordResetTokenExpires: { $gt: Date.now() }
+        });
+
+        if(!user){
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Token is invalid or has expired'
+            });
+        }
+
+        user.password = req.body.password;
+        user.confirmpassword = req.body.confirmpassword;
+
+        user.passwordResetToken = undefined;
+        user.passwordResetTokenExpires = undefined;
+
+        await user.save();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Password reset successful. Please login.'
+        });
+
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
 }
 
 
