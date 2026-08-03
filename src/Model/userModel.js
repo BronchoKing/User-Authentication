@@ -37,8 +37,9 @@ const userSchema = new mongoose.Schema({
         }
     },
 
-    time: {
-        type: Date.now
+    registeredAt: {
+        type: Date,
+        default: Date.now
     },
 
     passwordResetToken: String,
